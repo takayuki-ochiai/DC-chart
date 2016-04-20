@@ -52,14 +52,10 @@ ELTEX.CHART_COLOR = [
 // このクラスはChartJS1.1に依存しています。
 ELTEX.LineChart = function(id, url, params) {
   this.id = id;
-  this.url = url;
-  this.params = params;
 
   // idやurlが不正だった時のパターンの考慮
-  this.draw = function() {
-    $.get({
-      url: url
-    }).done(
+  this.draw = function(url, params) {
+    $.get(url, params).done(
       function(res) {
         //jQueryオブジェクト[0]とすれば、getContext("2D")できる。
         $('#' + this.id).append('<canvas class="lineChartCanvas"></canvas>');
@@ -75,10 +71,9 @@ ELTEX.LineChart = function(id, url, params) {
 
         // X軸のラベルに接尾の文字列を追加
         if (options.xScaleLabel != null) {
-          var newLabels = data.labels.map(function(label) {
-            return label + xScaleLabel;
+          data.labels = data.labels.map(function(label) {
+            return label + options.xScaleLabel;
           });
-          data.labels = newLabels;
         };
 
         // y軸のラベルに接尾の文字列を追加
@@ -86,10 +81,24 @@ ELTEX.LineChart = function(id, url, params) {
           options.scaleLabel = "<%=value%>" + options.yScaleLabel;
         };
 
-        // var chart = new Chart(ctx).Line(data, options);
+        // 色の設定
+        if (data.datasets != null) {
+          data.datasets.forEach(function(dataset, index) {
+            dataset.pointColor = ELTEX.CHART_COLOR[index].MAIN;
+            dataset.pointStrokeColor = ELTEX.CHART_COLOR[index].MAIN;
+            dataset.strokeColor = ELTEX.CHART_COLOR[index].SUB;
+            dataset.fillColor = ELTEX.CHART_COLOR[index].FUZZY;
+            dataset.tension = 0;
+          })
+        }
+
+        options.legendTemplate = "<% for (var i=0; i<datasets.length; i++){%><span style=\"background-color:<%=datasets[i].strokeColor%>\">&nbsp;&nbsp;&nbsp;</span>&nbsp;<%if(datasets[i].label){%><%=datasets[i].label%><%}%><br><%}%>";
+        options.bezierCurve = false;
+
+        var chart = new Chart(ctx).Line(data, options);
         // // 凡例のhtmlを取得して設定
-        // $('#' + this.id + ' .chartLegend').html(chart.generateLegend());
-      }
+        $('#' + this.id + ' .chartLegend').html(chart.generateLegend());
+      }.bind(this)
     ).fail(
       function(res) {
         console.log(res);
@@ -111,7 +120,7 @@ ELTEX.LineChart = function(id, url, params) {
 // optionは変えないはずなので、クライアント側に定数で置いておく
 // 軸の最大値はどっちの責任だろ
 $(function(){
-  var lineChart = new ELTEX.LineChart("chart1", "http://private-d67021-chart2.apiary-mock.com/line-charts", {});
+  var lineChart = new ELTEX.LineChart("chart1");
 
-  lineChart.draw();
+  lineChart.draw("http://private-d67021-chart2.apiary-mock.com/line-charts2", {});
 });
