@@ -1,3 +1,58 @@
 .chart1 {
     width: 90%;
 }
+
+.basicDataCard {
+  width: 300px;
+  height: 170px;
+  border: 1px solid #BDBDBD;
+  border-radius: 5px;
+}
+
+.basicDataCard__header {
+  width: 100%;
+  background: #F5F5F5;
+  text-align: left;
+  height: 22%;
+  line-height: 38px;
+}
+
+.basicDataCard__header h3 {
+  margin: 0px;
+  padding: 0px 10px;
+}
+
+.basicDataCard__header .fa {
+  margin-right: 7px;
+}
+
+.basicDataCard__main {
+  height: 56%;
+  text-align: center;
+}
+
+.basicDataCard__main h2 {
+  font-size: 30px;
+  padding-top: 10px;
+}
+
+.basicDataCard__main h2, .basicDataCard__main h3 {
+  margin: 0px;
+}
+
+.basicDataCard__comparison .fa {
+  color: #f44336;
+}
+
+.basicDataCard__footer {
+  width: 100%;
+  background: #F5F5F5;
+  text-align: right;
+  height: 22%;
+  line-height: 38px;
+}
+
+.basicDataCard__footer p {
+  padding-right: 12px;
+  margin: 0px;
+}
